@@ -1,12 +1,12 @@
 {
-  "name": "frontend",
+  "name": "himalaya_routes",
   "version": "1.0.0",
+  "description": "A complete full-stack Nepal tourism web application with Node.js/Express backend, SQLite database, and a beautiful frontend.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "description": ""
+  "license": "ISC"
 }
