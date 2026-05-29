@@ -28,13 +28,9 @@ Admin panel → **http://localhost:3000/admin.html**
 
 ---
 
-## 🔑 Default Login Credentials
 
-| Role  | Email                          | Password   |
-|-------|-------------------------------|------------|
-| Admin | admin@himalayanroutes.com     | Admin@123  |
 
-> ⚠️ **Change the admin password** after first login in production!
+
 
 ---
 
