@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Panel — Himalaya Routes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#080C0A;--forest:#0F2318;--pine:#163D27;--jade:#3D9B65;--snow:#F2EDE4;--cream:#FAF7F2;--gold:#D4882A;--amber:#F0A832;--muted:#8A9E92;--red:#C0392B;--sidebar:240px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);font-family:'Syne',sans-serif;display:flex;min-height:100vh;}
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--night);min-height:100vh;position:fixed;top:0;left:0;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06);}
+.sb-logo{font-family:'Fraunces',serif;font-style:italic;font-size:20px;color:var(--amber);padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.06);}
+.sb-logo span{display:block;font-size:10px;font-style:normal;font-family:'Syne',sans-serif;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.sb-nav{flex:1;padding:16px 0;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:12px 20px;color:rgba(242,237,228,.5);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border-left:2px solid transparent;}
+.sb-item:hover,.sb-item.active{color:var(--amber);border-left-color:var(--amber);background:rgba(240,168,50,.05);}
+.sb-icon{font-size:16px;width:20px;text-align:center;}
+.sb-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:50px;}
+.sb-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.06);}
+.sb-user{font-size:12px;color:var(--muted);}
+.sb-logout{margin-top:8px;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(242,237,228,.4);padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;width:100%;transition:all .2s;}
+.sb-logout:hover{border-color:var(--red);color:var(--red);}
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;padding:32px;}
+.page{display:none;}
+.page.active{display:block;}
+.page-title{font-family:'Fraunces',serif;font-size:28px;color:var(--forest);font-weight:700;margin-bottom:4px;}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+/* CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:white;border-radius:14px;padding:20px;border:1px solid rgba(0,0,0,.06);transition:box-shadow .2s;}
+.stat-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);}
+.sc-icon{font-size:24px;margin-bottom:10px;}
+.sc-num{font-family:'Fraunces',serif;font-size:32px;font-weight:700;color:var(--forest);}
+.sc-lbl{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
+.sc-sub{font-size:11px;color:var(--jade);margin-top:4px;font-weight:600;}
+/* TABLE */
+.card{background:white;border-radius:14px;border:1px solid rgba(0,0,0,.06);overflow:hidden;margin-bottom:20px;}
+.card-header{padding:16px 20px;border-bottom:1px solid rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center;}
+.card-title{font-size:15px;font-weight:700;color:var(--forest);}
+.card-action{background:var(--gold);color:white;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.card-action:hover{background:var(--amber);}
+table{width:100%;border-collapse:collapse;}
+th{background:rgba(0,0,0,.02);padding:10px 16px;text-align:left;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+td{padding:12px 16px;border-top:1px solid rgba(0,0,0,.04);font-size:13px;color:#333;vertical-align:middle;}
+tr:hover td{background:rgba(0,0,0,.01);}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:1px;}
+.badge-pending{background:#FEF3C7;color:#92400E;}
+.badge-reviewing{background:#DBEAFE;color:#1E40AF;}
+.badge-confirmed{background:#D1FAE5;color:#065F46;}
+.badge-completed{background:#E0E7FF;color:#3730A3;}
+.badge-cancelled{background:#FEE2E2;color:#991B1B;}
+.badge-trek{background:#D1FAE5;color:#065F46;}
+.badge-culture{background:#FEF3C7;color:#92400E;}
+.badge-nature{background:#DBEAFE;color:#1E40AF;}
+.badge-adventure{background:#FCE7F3;color:#9D174D;}
+.act-btn{background:none;border:1px solid rgba(0,0,0,.12);padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;color:#555;transition:all .2s;margin-right:4px;}
+.act-btn:hover{border-color:var(--jade);color:var(--jade);}
+.act-btn.danger:hover{border-color:var(--red);color:var(--red);}
+/* FORM */
+.form-card{background:white;border-radius:14px;border:1px solid rgba(0,0,0,.06);padding:24px;margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fg{display:flex;flex-direction:column;gap:6px;}
+.fg.full{grid-column:1/-1;}
+.fg label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);}
+.fg input,.fg select,.fg textarea{border:1.5px solid rgba(0,0,0,.1);border-radius:8px;padding:10px 12px;font-family:'Syne',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--amber);}
+.fg textarea{resize:vertical;min-height:80px;}
+.btn-submit{background:linear-gradient(135deg,var(--gold),var(--amber));color:white;padding:12px 28px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;margin-top:8px;}
+.btn-submit:hover{transform:translateY(-1px);}
+/* LOGIN */
+.admin-login{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--night);width:100%;}
+.login-box{background:var(--forest);border-radius:20px;padding:40px;width:380px;border:1px solid rgba(255,255,255,.08);}
+.login-logo{font-family:'Fraunces',serif;font-style:italic;font-size:24px;color:var(--amber);margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--muted);margin-bottom:28px;}
+.lf-group{margin-bottom:14px;}
+.lf-group label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(242,237,228,.4);display:block;margin-bottom:6px;}
+.lf-group input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:8px;color:var(--snow);padding:11px 14px;font-family:'Syne',sans-serif;font-size:13px;outline:none;}
+.lf-group input:focus{border-color:var(--amber);}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--gold),var(--amber));color:var(--night);padding:13px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;margin-top:6px;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--jade);color:white;padding:10px 24px;border-radius:50px;font-size:13px;font-weight:700;opacity:0;transition:all .3s;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--red);}
+.empty-row td{text-align:center;color:var(--muted);padding:32px;font-style:italic;}
+.filter-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.filter-pill{padding:6px 14px;border-radius:50px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid rgba(0,0,0,.1);background:transparent;color:var(--muted);transition:all .2s;}
+.filter-pill.on{background:var(--pine);color:white;border-color:var(--pine);}
+.detail-box{background:rgba(0,0,0,.02);border-radius:10px;padding:14px;font-size:13px;color:#444;line-height:1.7;margin-top:8px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="admin-login" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Himalaya Routes</div>
+    <div class="login-sub">Admin Panel · Secure Access</div>
+    <div class="lf-group"><label>Email</label><input type="email" id="aEmail" placeholder="admin@himalayanroutes.com" value="admin@himalayanroutes.com"></div>
+    <div class="lf-group"><label>Password</label><input type="password" id="aPass" placeholder="••••••••" value="Admin@123"></div>
+    <button class="btn-login" onclick="adminLogin()">Login to Admin Panel</button>
+    <p style="font-size:11px;color:rgba(242,237,228,.2);text-align:center;margin-top:14px;">Default: admin@himalayanroutes.com / Admin@123</p>
+  </div>
+</div>
+
+<!-- ADMIN LAYOUT -->
+<div id="adminLayout" style="display:none;width:100%;display:none;">
+  <aside class="sidebar">
+    <div class="sb-logo">Himalaya Routes <span>Admin Panel</span></div>
+    <nav class="sb-nav">
+      <div class="sb-item active" onclick="showPage('dashboard',this)"><span class="sb-icon">📊</span>Dashboard</div>
+      <div class="sb-item" onclick="showPage('bookings',this)"><span class="sb-icon">📋</span>Bookings<span class="sb-badge" id="pendingBadge">0</span></div>
+      <div class="sb-item" onclick="showPage('destinations',this)"><span class="sb-icon">🏔️</span>Destinations</div>
+      <div class="sb-item" onclick="showPage('users',this)"><span class="sb-icon">👥</span>Users</div>
+      <div class="sb-item" onclick="showPage('reviews',this)"><span class="sb-icon">⭐</span>Reviews<span class="sb-badge" id="reviewBadge">0</span></div>
+      <div class="sb-item" onclick="showPage('messages',this)"><span class="sb-icon">✉️</span>Messages<span class="sb-badge" id="msgBadge">0</span></div>
+      <div class="sb-item" onclick="window.open('/','_blank')"><span class="sb-icon">🌐</span>View Site</div>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-user" id="sbUser">Loading...</div>
+      <button class="sb-logout" onclick="adminLogout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">Overview of all activity</div>
+      <div class="stat-grid" id="dashStats"></div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent Bookings</div><button class="card-action" onclick="showPage('bookings',document.querySelector('[onclick*=bookings]'))">View All</button></div>
+        <table><thead><tr><th>Name</th><th>Email</th><th>Tour Type</th><th>Arrival</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="recentBookings"></tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Top Requested Destinations</div></div>
+        <table><thead><tr><th>#</th><th>Destination</th><th>Requests</th></tr></thead>
+        <tbody id="topDests"></tbody></table>
+      </div>
+    </div>
+
+    <!-- BOOKINGS -->
+    <div class="page" id="page-bookings">
+      <div class="page-title">Bookings</div>
+      <div class="page-sub">Manage all booking inquiries</div>
+      <div class="filter-row">
+        <button class="filter-pill on" onclick="filterBookings('all',this)">All</button>
+        <button class="filter-pill" onclick="filterBookings('pending',this)">Pending</button>
+        <button class="filter-pill" onclick="filterBookings('reviewing',this)">Reviewing</button>
+        <button class="filter-pill" onclick="filterBookings('confirmed',this)">Confirmed</button>
+        <button class="filter-pill" onclick="filterBookings('completed',this)">Completed</button>
+      </div>
+      <div class="card">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Contact</th><th>Tour Type</th><th>Arrival</th><th>Group</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="bookingsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- DESTINATIONS -->
+    <div class="page" id="page-destinations">
+      <div class="page-title">Destinations</div>
+      <div class="page-sub">Manage all Nepal destinations</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">All Destinations</div><button class="card-action" onclick="showAddDestForm()">+ Add New</button></div>
+        <table><thead><tr><th>Icon</th><th>Name</th><th>Category</th><th>Difficulty</th><th>Best Time</th><th>Featured</th><th>Actions</th></tr></thead>
+        <tbody id="destsTable"></tbody></table>
+      </div>
+      <div class="form-card" id="addDestForm" style="display:none;">
+        <div style="font-size:16px;font-weight:700;margin-bottom:16px;">Add New Destination</div>
+        <div class="form-grid">
+          <div class="fg"><label>Name</label><input id="dn" placeholder="Everest Base Camp Trek"></div>
+          <div class="fg"><label>Category</label><select id="dc"><option value="trek">Trek</option><option value="culture">Culture</option><option value="nature">Nature</option><option value="adventure">Adventure</option></select></div>
+          <div class="fg"><label>Best Time</label><input id="dbt" placeholder="Oct-Nov, Mar-May"></div>
+          <div class="fg"><label>Duration</label><input id="dd" placeholder="12-14 days"></div>
+          <div class="fg"><label>Difficulty</label><select id="ddf"><option>Easy</option><option>Moderate</option><option>Challenging</option><option>Expert</option></select></div>
+          <div class="fg"><label>Altitude</label><input id="da" placeholder="5,364m"></div>
+          <div class="fg"><label>Region</label><input id="drg" placeholder="Solukhumbu, Koshi"></div>
+          <div class="fg"><label>Nearest City</label><input id="dnc" placeholder="Lukla"></div>
+          <div class="fg"><label>Icon (emoji)</label><input id="di" placeholder="🏔️"></div>
+          <div class="fg"><label>Featured?</label><select id="dft"><option value="0">No</option><option value="1">Yes</option></select></div>
+          <div class="fg full"><label>Image URL</label><input id="dimg" placeholder="https://images.unsplash.com/..."></div>
+          <div class="fg full"><label>Description</label><textarea id="ddesc" placeholder="Describe this destination..."></textarea></div>
+        </div>
+        <button class="btn-submit" onclick="addDestination()">Save Destination</button>
+        <button class="btn-submit" style="background:#ccc;color:#333;margin-left:8px;" onclick="$('addDestForm').style.display='none'">Cancel</button>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="page" id="page-users">
+      <div class="page-title">Users</div>
+      <div class="page-sub">All registered users</div>
+      <div class="card">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Country</th><th>Role</th><th>Bookings</th><th>Joined</th><th>Actions</th></tr></thead>
+        <tbody id="usersTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="page" id="page-reviews">
+      <div class="page-title">Reviews</div>
+      <div class="page-sub">Approve or reject traveler reviews</div>
+      <div class="card">
+        <table><thead><tr><th>Reviewer</th><th>Destination</th><th>Rating</th><th>Review</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody id="reviewsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="page" id="page-messages">
+      <div class="page-title">Contact Messages</div>
+      <div class="page-sub">Messages from the contact form</div>
+      <div class="card">
+        <table><thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody id="messagesTable"></tbody></table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="aToast"></div>
+
+<script>
+const API = '/api';
+let aToken = localStorage.getItem('hr_admin_token');
+let allBookings = [], bFilter = 'all';
+
+const $ = id => document.getElementById(id);
+function toast(msg, err=false){ const t=$('aToast'); t.textContent=msg; t.className='toast show'+(err?' err':''); clearTimeout(t._t); t._t=setTimeout(()=>t.className='toast',3000); }
+
+async function aApi(path, opts={}){
+  const h={'Content-Type':'application/json'};
+  if(aToken) h['Authorization']='Bearer '+aToken;
+  const r=await fetch(API+path,{...opts,headers:h});
+  const d=await r.json();
+  if(!r.ok) throw new Error(d.error||'Error');
+  return d;
+}
+
+async function adminLogin(){
+  try{
+    const d=await aApi('/auth/login',{method:'POST',body:JSON.stringify({email:$('aEmail').value,password:$('aPass').value})});
+    if(d.user.role!=='admin'){toast('Not an admin account',true);return;}
+    aToken=d.token;
+    localStorage.setItem('hr_admin_token',aToken);
+    $('loginScreen').style.display='none';
+    $('adminLayout').style.display='flex';
+    $('sbUser').textContent=d.user.name+' (Admin)';
+    loadDashboard();
+  }catch(e){toast(e.message,true);}
+}
+
+function adminLogout(){
+  localStorage.removeItem('hr_admin_token');
+  location.reload();
+}
+
+function showPage(name, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  $('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  if(name==='dashboard') loadDashboard();
+  else if(name==='bookings') loadBookings();
+  else if(name==='destinations') loadDestinations();
+  else if(name==='users') loadUsers();
+  else if(name==='reviews') loadReviews();
+  else if(name==='messages') loadMessages();
+}
+
+function fmtDate(d){ return d ? new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—'; }
+function badge(s){ return `<span class="badge badge-${s}">${s}</span>`; }
+
+// DASHBOARD
+async function loadDashboard(){
+  try{
+    const d=await aApi('/admin/dashboard');
+    $('pendingBadge').textContent=d.bookings.pending;
+    $('reviewBadge').textContent=d.reviews_pending;
+    $('msgBadge').textContent=d.messages_unread;
+    $('dashStats').innerHTML=`
+      <div class="stat-card"><div class="sc-icon">📋</div><div class="sc-num">${d.bookings.total}</div><div class="sc-lbl">Total Bookings</div><div class="sc-sub">${d.bookings.pending} pending</div></div>
+      <div class="stat-card"><div class="sc-icon">👥</div><div class="sc-num">${d.users}</div><div class="sc-lbl">Registered Users</div></div>
+      <div class="stat-card"><div class="sc-icon">🏔️</div><div class="sc-num">${d.destinations}</div><div class="sc-lbl">Destinations</div></div>
+      <div class="stat-card"><div class="sc-icon">✉️</div><div class="sc-num">${d.messages_unread}</div><div class="sc-lbl">Unread Messages</div></div>`;
+    $('recentBookings').innerHTML = d.recent_bookings.length
+      ? d.recent_bookings.map(b=>`<tr><td><strong>${b.first_name} ${b.last_name}</strong></td><td>${b.email}</td><td>${b.tour_type||'—'}</td><td>${fmtDate(b.arrival_date)}</td><td>${badge(b.status)}</td><td>${fmtDate(b.created_at)}</td></tr>`).join('')
+      : '<tr class="empty-row"><td colspan="6">No bookings yet</td></tr>';
+    $('topDests').innerHTML = d.top_destinations.length
+      ? d.top_destinations.map((t,i)=>`<tr><td>${i+1}</td><td>${t.icon||''} ${t.name}</td><td><strong>${t.count}</strong> requests</td></tr>`).join('')
+      : '<tr class="empty-row"><td colspan="3">No data yet</td></tr>';
+  }catch(e){toast(e.message,true);}
+}
+
+// BOOKINGS
+async function loadBookings(){
+  try{
+    allBookings=await aApi('/bookings');
+    renderBookings();
+  }catch(e){toast(e.message,true);}
+}
+function filterBookings(f,el){ bFilter=f; document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('on')); el.classList.add('on'); renderBookings(); }
+function renderBookings(){
+  const list=bFilter==='all'?allBookings:allBookings.filter(b=>b.status===bFilter);
+  $('bookingsTable').innerHTML=list.length
+    ?list.map(b=>`<tr>
+      <td>#${b.id}</td>
+      <td><strong>${b.first_name} ${b.last_name}</strong><br><small style="color:var(--muted)">${b.user_name||'Guest'}</small></td>
+      <td>${b.email}<br><small>${b.whatsapp||''}</small></td>
+      <td>${b.tour_type||'—'}</td>
+      <td>${fmtDate(b.arrival_date)}</td>
+      <td>${b.group_size||'—'}</td>
+      <td>${badge(b.status)}</td>
+      <td>
+        <select onchange="updateBookingStatus(${b.id},this.value)" style="border:1px solid #ddd;padding:4px 8px;border-radius:4px;font-size:11px;background:white;">
+          ${['pending','reviewing','confirmed','completed','cancelled'].map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+        </select>
+      </td></tr>`).join('')
+    :'<tr class="empty-row"><td colspan="8">No bookings found</td></tr>';
+}
+async function updateBookingStatus(id,status){
+  try{
+    await aApi('/bookings/'+id+'/status',{method:'PUT',body:JSON.stringify({status})});
+    toast('Booking #'+id+' → '+status);
+    loadBookings();
+    loadDashboard();
+  }catch(e){toast(e.message,true);}
+}
+
+// DESTINATIONS
+async function loadDestinations(){
+  try{
+    const d=await aApi('/destinations');
+    $('destsTable').innerHTML=d.length
+      ?d.map(dest=>`<tr>
+        <td style="font-size:22px">${dest.icon||'🏔️'}</td>
+        <td><strong>${dest.name}</strong></td>
+        <td>${badge(dest.category)}</td>
+        <td>${dest.difficulty||'—'}</td>
+        <td>${dest.best_time||'—'}</td>
+        <td>${dest.is_featured?'⭐ Yes':'No'}</td>
+        <td>
+          <button class="act-btn" onclick="window.open('/','_blank')">View</button>
+          <button class="act-btn danger" onclick="deleteDestination(${dest.id},'${dest.name.replace(/'/g,'\\\')}')">Delete</button>
+        </td></tr>`).join('')
+      :'<tr class="empty-row"><td colspan="7">No destinations</td></tr>';
+  }catch(e){toast(e.message,true);}
+}
+function showAddDestForm(){ $('addDestForm').style.display='block'; $('addDestForm').scrollIntoView({behavior:'smooth'}); }
+async function addDestination(){
+  try{
+    await aApi('/destinations',{method:'POST',body:JSON.stringify({
+      name:$('dn').value, category:$('dc').value, description:$('ddesc').value,
+      best_time:$('dbt').value, duration:$('dd').value, difficulty:$('ddf').value,
+      altitude:$('da').value, region:$('drg').value, nearest_city:$('dnc').value,
+      icon:$('di').value, image_url:$('dimg').value, is_featured:parseInt($('dft').value)
+    })});
+    toast('Destination added!');
+    $('addDestForm').style.display='none';
+    loadDestinations();
+  }catch(e){toast(e.message,true);}
+}
+async function deleteDestination(id,name){
+  if(!confirm('Deactivate "'+name+'"?')) return;
+  try{ await aApi('/destinations/'+id,{method:'DELETE'}); toast('Destination deactivated'); loadDestinations(); }
+  catch(e){toast(e.message,true);}
+}
+
+// USERS
+async function loadUsers(){
+  try{
+    const u=await aApi('/admin/users');
+    $('usersTable').innerHTML=u.length
+      ?u.map(usr=>`<tr>
+        <td>#${usr.id}</td>
+        <td><strong>${usr.name}</strong></td>
+        <td>${usr.email}</td>
+        <td>${usr.country||'—'}</td>
+        <td><span class="badge ${usr.role==='admin'?'badge-confirmed':'badge-reviewing'}">${usr.role}</span></td>
+        <td>${usr.bookings_count}</td>
+        <td>${fmtDate(usr.created_at)}</td>
+        <td>
+          <button class="act-btn" onclick="toggleRole(${usr.id},'${usr.role}')">
+            ${usr.role==='admin'?'→ User':'→ Admin'}
+          </button>
+        </td></tr>`).join('')
+      :'<tr class="empty-row"><td colspan="8">No users yet</td></tr>';
+  }catch(e){toast(e.message,true);}
+}
+async function toggleRole(id,current){
+  const newRole=current==='admin'?'user':'admin';
+  if(!confirm('Change role to '+newRole+'?')) return;
+  try{ await aApi('/admin/users/'+id+'/role',{method:'PUT',body:JSON.stringify({role:newRole})}); toast('Role updated'); loadUsers(); }
+  catch(e){toast(e.message,true);}
+}
+
+// REVIEWS
+async function loadReviews(){
+  try{
+    const r=await aApi('/admin/reviews');
+    $('reviewBadge').textContent=r.filter(x=>!x.is_approved).length;
+    $('reviewsTable').innerHTML=r.length
+      ?r.map(rv=>`<tr>
+        <td><strong>${rv.reviewer_name}</strong><br><small>${rv.reviewer_country||''}</small></td>
+        <td>${rv.destination_name||'General'}</td>
+        <td>${'⭐'.repeat(rv.rating)}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${rv.body}</td>
+        <td>${rv.is_approved?'<span class="badge badge-confirmed">Approved</span>':'<span class="badge badge-pending">Pending</span>'}</td>
+        <td>${fmtDate(rv.created_at)}</td>
+        <td>${!rv.is_approved?`<button class="act-btn" onclick="approveReview(${rv.id})">Approve</button>`:'<span style="color:var(--muted);font-size:12px;">Done</span>'}</td>
+      </tr>`).join('')
+      :'<tr class="empty-row"><td colspan="7">No reviews yet</td></tr>';
+  }catch(e){toast(e.message,true);}
+}
+async function approveReview(id){
+  try{ await aApi('/reviews/'+id+'/approve',{method:'PUT'}); toast('Review approved!'); loadReviews(); }
+  catch(e){toast(e.message,true);}
+}
+
+// MESSAGES
+async function loadMessages(){
+  try{
+    const m=await aApi('/contact');
+    $('msgBadge').textContent=m.filter(x=>!x.is_read).length;
+    $('messagesTable').innerHTML=m.length
+      ?m.map(msg=>`<tr style="${!msg.is_read?'background:#FFFBEB;':''}">
+        <td><strong>${msg.name}</strong></td>
+        <td>${msg.email}</td>
+        <td>${msg.subject||'—'}</td>
+        <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${msg.message}</td>
+        <td>${msg.is_read?'<span class="badge badge-completed">Read</span>':'<span class="badge badge-pending">New</span>'}</td>
+        <td>${fmtDate(msg.created_at)}</td>
+        <td>${!msg.is_read?`<button class="act-btn" onclick="markRead(${msg.id})">Mark Read</button>`:'—'}</td>
+      </tr>`).join('')
+      :'<tr class="empty-row"><td colspan="7">No messages yet</td></tr>';
+  }catch(e){toast(e.message,true);}
+}
+async function markRead(id){
+  try{ await aApi('/contact/'+id+'/read',{method:'PUT'}); loadMessages(); }
+  catch(e){toast(e.message,true);}
+}
+
+// AUTO LOGIN IF TOKEN EXISTS
+if(aToken){
+  aApi('/auth/me').then(u=>{
+    if(u.role==='admin'){
+      $('loginScreen').style.display='none';
+      $('adminLayout').style.display='flex';
+      $('sbUser').textContent=u.name+' (Admin)';
+      loadDashboard();
+    }else{ localStorage.removeItem('hr_admin_token'); }
+  }).catch(()=>{ localStorage.removeItem('hr_admin_token'); });
+}
+</script>
+</body>
+</html>

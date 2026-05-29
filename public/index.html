@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Himalaya Routes — Nepal's Premier Travel Concierge</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;0,900;1,300;1,700&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="scrollTo('hero')">Himalaya Routes</div>
+  <ul class="nav-links">
+    <li><a href="#places" onclick="scrollTo('places')">Destinations</a></li>
+    <li><a href="#besttime" onclick="scrollTo('besttime')">Best Time</a></li>
+    <li><a href="#builder" onclick="scrollTo('builder')">Plan Trip</a></li>
+    <li><a href="#how" onclick="scrollTo('how')">How It Works</a></li>
+    <li><a href="#book" onclick="scrollTo('book')">Book Now</a></li>
+  </ul>
+  <div class="nav-right">
+    <div id="navAuthArea">
+      <button class="btn-outline-sm" onclick="openModal('loginModal')">Login</button>
+      <button class="nav-cta" onclick="openModal('loginModal')">Start Planning</button>
+    </div>
+    <div id="navUserArea" style="display:none;">
+      <span id="navUserName" style="color:var(--amber);font-size:13px;font-weight:700;"></span>
+      <button class="btn-outline-sm" onclick="logout()">Logout</button>
+      <button class="nav-cta" onclick="scrollTo('builder')">My Trip</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <svg class="hero-mountain" viewBox="0 0 1440 200" fill="none">
+    <path d="M0,200 L0,140 L120,60 L200,100 L320,20 L440,80 L560,10 L660,70 L760,30 L860,90 L960,40 L1080,110 L1200,55 L1320,100 L1440,60 L1440,200 Z" fill="rgba(15,35,24,0.75)"/>
+    <path d="M0,200 L0,170 L180,110 L280,150 L400,90 L500,135 L600,75 L700,130 L820,85 L940,150 L1060,100 L1200,155 L1320,115 L1440,140 L1440,200 Z" fill="rgba(22,61,39,0.5)"/>
+  </svg>
+  <div class="hero-content">
+    <div class="hero-tag">Nepal's Premier Concierge Travel</div>
+    <h1>Discover<br><em>Nepal</em><br>Your Way.</h1>
+    <p class="hero-sub">Build your dream Nepal itinerary — we handle everything from the moment you land. SIM, hotel, transport, guides &amp; beyond.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="scrollTo('builder')">Build My Itinerary</button>
+      <button class="btn-ghost" onclick="scrollTo('places')">Explore Places</button>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><div class="stat-n" id="statDest">15+</div><div class="stat-l">Destinations</div></div>
+  <div class="stat"><div class="stat-n">360°</div><div class="stat-l">Concierge Service</div></div>
+  <div class="stat"><div class="stat-n">500+</div><div class="stat-l">Happy Travelers</div></div>
+  <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">On-Ground Support</div></div>
+</div>
+
+<!-- BEST TIME -->
+<section id="besttime" class="best-time-section">
+  <div class="best-time-inner">
+    <div class="sec-label" style="color:var(--amber)">When to Visit</div>
+    <h2 class="sec-title" style="color:var(--snow)">Best Time to Visit <em>Nepal</em></h2>
+    <p class="sec-sub" style="color:rgba(242,237,228,0.55)">Nepal's climate varies dramatically by season and altitude. Choose the right window for your adventure.</p>
+    <div class="season-grid">
+      <div class="season-card peak">
+        <span class="season-badge peak">Peak Season</span>
+        <div class="season-months">Oct — Nov</div>
+        <div class="season-name">Autumn</div>
+        <div class="season-desc">Crystal-clear skies, dry trails, and the best mountain views of the year. Ideal for trekking, wildlife safaris, and cultural festivals. Days are warm, nights cool at altitude.</div>
+        <div class="season-tags"><span class="season-tag">Best Mountain Views</span><span class="season-tag">Dashain Festival</span><span class="season-tag">All Treks Open</span><span class="season-tag">Wildlife Safari</span></div>
+      </div>
+      <div class="season-card good">
+        <span class="season-badge good">Good Season</span>
+        <div class="season-months">Mar — May</div>
+        <div class="season-name">Spring</div>
+        <div class="season-desc">Rhododendrons bloom in a riot of colour across the hills. Stable weather, comfortable temperatures, and great for trekking before the monsoon arrives in June.</div>
+        <div class="season-tags"><span class="season-tag">Rhododendrons</span><span class="season-tag">Warm Trails</span><span class="season-tag">Everest Climbs</span><span class="season-tag">Holi Festival</span></div>
+      </div>
+      <div class="season-card off">
+        <span class="season-badge off">Monsoon</span>
+        <div class="season-months">Jun — Sep</div>
+        <div class="season-name">Summer</div>
+        <div class="season-desc">Heavy rain in most regions but lush green landscapes and very few tourists. Upper Mustang and rain-shadow areas are perfect now. Lower costs and peaceful temples.</div>
+        <div class="season-tags"><span class="season-tag">Upper Mustang</span><span class="season-tag">Lush Greenery</span><span class="season-tag">Lower Prices</span><span class="season-tag">Few Crowds</span></div>
+      </div>
+      <div class="season-card off">
+        <span class="season-badge off">Off Season</span>
+        <div class="season-months">Dec — Feb</div>
+        <div class="season-name">Winter</div>
+        <div class="season-desc">Cold but clear at lower elevations. High passes may be closed but Kathmandu, Lumbini, Chitwan, and Pokhara remain excellent for cultural tours.</div>
+        <div class="season-tags"><span class="season-tag">Kathmandu Valley</span><span class="season-tag">Chitwan Safari</span><span class="season-tag">Lumbini</span><span class="season-tag">Crisp Air</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLACES -->
+<section id="places" style="padding:100px 0;background:var(--cream);">
+  <div class="section">
+    <div class="sec-label">All Destinations</div>
+    <h2 class="sec-title">Nepal's <em>Finest</em> Places</h2>
+    <p class="sec-sub">Click any destination for full details — why visit, best time, things to do, and a day-by-day itinerary.</p>
+    <div class="places-filter">
+      <button class="filter-btn active" onclick="filterPlaces('all',this)">All</button>
+      <button class="filter-btn" onclick="filterPlaces('trek',this)">🏔️ Trekking</button>
+      <button class="filter-btn" onclick="filterPlaces('culture',this)">🛕 Culture</button>
+      <button class="filter-btn" onclick="filterPlaces('nature',this)">🌿 Nature</button>
+      <button class="filter-btn" onclick="filterPlaces('adventure',this)">🪂 Adventure</button>
+    </div>
+    <div id="placesGrid" class="places-grid">
+      <div class="loading-state">Loading destinations...</div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS STRIP -->
+<section style="background:var(--forest);padding:80px 0;">
+  <div class="section">
+    <div class="sec-label" style="color:var(--amber)">Traveler Stories</div>
+    <h2 class="sec-title" style="color:var(--snow)">What Our <em>Guests</em> Say</h2>
+    <div id="reviewsStrip" class="reviews-strip">Loading reviews...</div>
+  </div>
+</section>
+
+<!-- ITINERARY BUILDER -->
+<section id="builder" style="background:var(--pine);padding:100px 0;">
+  <div class="section">
+    <div class="sec-label" style="color:var(--amber)">Custom Builder</div>
+    <h2 class="sec-title" style="color:var(--snow)">Plan Your <em>Perfect</em> Trip</h2>
+    <p class="sec-sub">Add destinations, set your preferences, and we'll craft a full custom itinerary for you.</p>
+    <div class="builder-layout">
+      <div class="builder-left">
+        <div class="days-row">
+          <span class="days-label">Trip Duration</span>
+          <div class="days-controls">
+            <button class="day-btn" onclick="changeDays(-1)">−</button>
+            <div class="days-num" id="daysNum">7</div>
+            <button class="day-btn" onclick="changeDays(1)">+</button>
+          </div>
+          <span style="font-size:13px;color:var(--muted);">days in Nepal</span>
+        </div>
+        <div class="itinerary-days" id="itineraryDays"></div>
+        <div class="interests-row">
+          <div class="int-label">Your Interests</div>
+          <div class="int-chips">
+            <button class="int-chip" onclick="toggleChip(this)">🏔️ Trekking</button>
+            <button class="int-chip" onclick="toggleChip(this)">🛕 Culture</button>
+            <button class="int-chip" onclick="toggleChip(this)">🪂 Adventure</button>
+            <button class="int-chip" onclick="toggleChip(this)">💍 Luxury</button>
+            <button class="int-chip" onclick="toggleChip(this)">📸 Photography</button>
+            <button class="int-chip" onclick="toggleChip(this)">🧘 Wellness</button>
+            <button class="int-chip" onclick="toggleChip(this)">🐘 Wildlife</button>
+            <button class="int-chip" onclick="toggleChip(this)">🍜 Food & Culture</button>
+          </div>
+        </div>
+        <div style="margin-top:24px;">
+          <div class="int-label">Preferences</div>
+          <div class="prefs-grid">
+            <div class="pref-item"><label>Group Size</label><select id="prefGroup"><option>Solo</option><option>Couple</option><option>Small Group (3-6)</option><option>Large Group (7+)</option></select></div>
+            <div class="pref-item"><label>Budget</label><select id="prefBudget"><option>Budget ($)</option><option>Mid-Range ($$)</option><option>Luxury ($$$)</option></select></div>
+            <div class="pref-item"><label>Arrival Date</label><input type="date" id="prefDate" style="color-scheme:dark;"></div>
+            <div class="pref-item"><label>Fitness Level</label><select id="prefFitness"><option>Light Walking</option><option>Moderate Hikes</option><option>Serious Trekking</option><option>Expert</option></select></div>
+          </div>
+        </div>
+        <button class="btn-gold-full" onclick="saveAndSubmitItinerary()" style="margin-top:24px;">📋 Save &amp; Send My Plan</button>
+        <p style="font-size:12px;color:rgba(242,237,228,0.3);margin-top:10px;text-align:center;">Saved to your account · We'll reply with a custom quote within 2 hours</p>
+      </div>
+      <div class="summary-card">
+        <div class="summary-title">Trip Summary</div>
+        <div class="summary-sub">Your selected destinations</div>
+        <div class="summary-items" id="summaryItems"><div class="summary-empty">No destinations added yet. Click + on any card.</div></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row"><span>Duration</span><span id="sumDays">7 days</span></div>
+        <div class="summary-row"><span>Stops</span><span id="sumStops">0</span></div>
+        <div class="summary-row"><span>Status</span><span id="sumStatus" style="color:var(--amber);">Building...</span></div>
+        <div class="summary-divider"></div>
+        <button class="btn-gold-full" onclick="saveAndSubmitItinerary()">🏔 Request Free Quote</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="padding:100px 0;background:var(--cream);">
+  <div class="section">
+    <div class="sec-label">The Process</div>
+    <h2 class="sec-title">How It <em>Works</em></h2>
+    <p class="sec-sub">Five simple steps from your sofa to the Himalayas — we handle every detail.</p>
+    <div class="steps-grid">
+      <div class="step-item"><div class="step-circle">🗺️</div><div class="step-n">STEP 01</div><div class="step-t">Build Itinerary</div><div class="step-d">Pick your days, destinations &amp; interests using our planner above.</div></div>
+      <div class="step-item"><div class="step-circle">📩</div><div class="step-n">STEP 02</div><div class="step-t">We Plan</div><div class="step-d">Our team crafts a full custom schedule matching your choices within 2 hours.</div></div>
+      <div class="step-item"><div class="step-circle">✅</div><div class="step-n">STEP 03</div><div class="step-t">Confirm &amp; Pay</div><div class="step-d">Review your itinerary, approve, and secure your trip with a deposit.</div></div>
+      <div class="step-item"><div class="step-circle">✈️</div><div class="step-n">STEP 04</div><div class="step-t">Land in Nepal</div><div class="step-d">We greet you at the airport with SIM card, welcome kit &amp; your assigned guide.</div></div>
+      <div class="step-item"><div class="step-circle">🏔️</div><div class="step-n">STEP 05</div><div class="step-t">We Handle All</div><div class="step-d">Hotel, transport, tours, meals, permits — you just experience Nepal.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section id="book" style="background:linear-gradient(135deg,var(--pine),var(--forest));padding:100px 0;">
+  <div class="section" style="max-width:1100px;">
+    <div class="book-layout">
+      <div>
+        <div class="sec-label" style="color:var(--amber)">Book Your Trip</div>
+        <h2 class="sec-title" style="color:var(--snow)">Ready to <em>Explore?</em></h2>
+        <p class="sec-sub" style="color:rgba(242,237,228,0.5)">Fill in your details and we'll be in touch within 2 hours with a personalised quote and itinerary.</p>
+        <div class="book-features">
+          <div class="book-feat"><div class="feat-icon">📱</div><div><h4>SIM Card on Arrival</h4><p>Stay connected from the moment you land.</p></div></div>
+          <div class="book-feat"><div class="feat-icon">🏨</div><div><h4>Hotels Pre-Booked</h4><p>Perfectly matched to your budget and style.</p></div></div>
+          <div class="book-feat"><div class="feat-icon">🚐</div><div><h4>Private Transport</h4><p>Private vehicle and driver for your entire stay.</p></div></div>
+          <div class="book-feat"><div class="feat-icon">🆘</div><div><h4>24/7 WhatsApp Support</h4><p>Direct line to your coordinator any time.</p></div></div>
+        </div>
+      </div>
+      <div class="book-form">
+        <div class="form-title">Get Your Quote</div>
+        <div class="form-sub">Free, no-obligation itinerary within 2 hours</div>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" id="bkFirst" placeholder="Ram"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" id="bkLast" placeholder="Sharma"></div>
+        </div>
+        <div class="form-group"><label>Email / WhatsApp</label><input type="text" id="bkEmail" placeholder="email@example.com or +977..."></div>
+        <div class="form-row">
+          <div class="form-group"><label>Arrival Date</label><input type="date" id="bkDate" style="color-scheme:dark;"></div>
+          <div class="form-group"><label>Duration</label><select id="bkDuration"><option>3-5 days</option><option>6-8 days</option><option>9-12 days</option><option>13-15 days</option><option>16+ days</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Tour Type</label><select id="bkType"><option>Trekking &amp; Hiking</option><option>Cultural &amp; Heritage</option><option>Adventure Sports</option><option>Luxury / Honeymoon</option><option>Full Concierge Mix</option></select></div>
+          <div class="form-group"><label>Group Size</label><select id="bkGroup"><option>Solo</option><option>Couple (2)</option><option>Small Group (3-6)</option><option>Large Group (7+)</option></select></div>
+        </div>
+        <div class="form-group"><label>Special Requests</label><textarea id="bkNotes" placeholder="Any specific places, dietary needs, or preferences..."></textarea></div>
+        <button class="btn-gold-full" onclick="submitBooking()">🏔 Request My Free Quote</button>
+        <p class="form-note">We reply via WhatsApp or email · No payment required to enquire</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div><div class="footer-brand">Himalaya Routes</div><p class="footer-tagline">Nepal's premier full-service travel concierge. From the moment you land to the moment you leave — we handle everything.</p></div>
+  <div class="footer-col"><h4>Destinations</h4><ul id="footerDests"><li><a href="#">Loading...</a></li></ul></div>
+  <div class="footer-col"><h4>Services</h4><ul><li><a href="#">Airport Pickup</a></li><li><a href="#">Hotel Booking</a></li><li><a href="#">Trekking Guides</a></li><li><a href="#">Permits &amp; Visas</a></li></ul></div>
+  <div class="footer-col"><h4>Contact</h4><ul><li><a href="#">WhatsApp Us</a></li><li><a href="#">info@himalayanroutes.com</a></li><li><a href="#">Thamel, Kathmandu</a></li></ul></div>
+</footer>
+<div class="footer-bottom"><p>© 2025 Himalaya Routes · Nepal Tourism Board Licensed</p><p>Built with ♥ in Nepal 🇳🇵</p></div>
+
+<!-- DESTINATION MODAL -->
+<div class="modal-overlay" id="destModal" onclick="closeDestModal(event)">
+  <div class="modal" id="destModalInner">
+    <button class="modal-close" onclick="closeDestModalBtn()">✕</button>
+    <img id="mImg" class="modal-hero-img" src="" alt="">
+    <div class="modal-header">
+      <div class="modal-cat" id="mCat"></div>
+      <div class="modal-name" id="mName"></div>
+      <div class="modal-best-time" id="mBest"></div>
+      <div class="modal-desc" id="mDesc"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section"><div class="modal-sec-title">💡 Why Visit</div><div id="mWhy"></div></div>
+      <div class="modal-section"><div class="modal-sec-title">🎯 Things To Do</div><div id="mActs" class="acts-grid"></div></div>
+      <div class="modal-section"><div class="modal-sec-title">⭐ Highlights</div><div id="mHL" class="highlights-wrap"></div></div>
+      <div class="modal-section"><div class="modal-sec-title">📅 Sample Itinerary</div><div id="mItin" class="timeline"></div></div>
+      <div class="modal-section"><div class="modal-sec-title">ℹ️ Info</div><div id="mInfo" class="info-grid"></div></div>
+      <div id="mReviews" class="modal-section"></div>
+      <button class="btn-gold-full" id="mAddBtn" onclick="addFromModal()">＋ Add to My Itinerary</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="loginModal" onclick="closeLoginModal(event)">
+  <div class="modal auth-modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <div style="padding:36px;">
+      <div id="loginForm">
+        <h2 class="form-title" style="color:var(--snow);margin-bottom:6px;">Welcome Back</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:24px;">Login to save your itinerary and track bookings</p>
+        <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"></div>
+        <button class="btn-gold-full" onclick="doLogin()" style="margin-top:8px;">Login</button>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted);">Don't have an account? <a href="#" onclick="showRegister()" style="color:var(--amber);">Register</a></p>
+      </div>
+      <div id="registerForm" style="display:none;">
+        <h2 class="form-title" style="color:var(--snow);margin-bottom:6px;">Create Account</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:24px;">Join to save itineraries and manage bookings</p>
+        <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Ram Sharma"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min. 6 characters"></div>
+        <div class="form-group"><label>Country</label><input type="text" id="regCountry" placeholder="Nepal"></div>
+        <button class="btn-gold-full" onclick="doRegister()" style="margin-top:8px;">Create Account</button>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted);">Already registered? <a href="#" onclick="showLogin()" style="color:var(--amber);">Login</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
