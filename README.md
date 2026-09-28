@@ -141,19 +141,6 @@ The database file is created automatically at `backend/database/himalaya_routes.
 
 ---
 
-## ⚙️ Configuration (.env)
-
-```env
-PORT=3000
-NODE_ENV=development
-JWT_SECRET=your_super_secret_key_here
-DB_PATH=./database/himalaya_routes.db
-ADMIN_EMAIL=admin@himalayanroutes.com
-ADMIN_PASSWORD=Admin@123
-```
-
----
-
 ## 🎨 Features
 
 ### Frontend (index.html)
